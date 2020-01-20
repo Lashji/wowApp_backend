@@ -1,0 +1,22 @@
+{
+  "name": "wowapp_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lashji/wowApp_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lashji/wowApp_backend/issues"
+  },
+  "homepage": "https://github.com/Lashji/wowApp_backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
