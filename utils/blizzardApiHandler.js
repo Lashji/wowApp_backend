@@ -8,6 +8,13 @@ const getData = () => {
 
 }
 
+const refreshData = () => {
+
+	console.log("refreshing data")
+
+}
+
 module.exports = {
-	getData
+	getData,
+	refreshData
 }

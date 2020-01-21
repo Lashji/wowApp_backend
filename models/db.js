@@ -15,16 +15,18 @@ function connectDB(dbConfig) {
 		.then(() => {
 			mongoose.connection.on('error', (err) => {
 				console.log("Error when connecting: ", err)
+				return
 			});
 
 			mongoose.connection.on('reconnectFailed', handleCriticalError);
+			console.log("db Connected event")
 			dbEmitter.emit("connected")
 		})
 		.catch(handleCriticalError);
 }
 
 function handleCriticalError(err) {
-	debug(err);
+	console.warn("err: ", err);
 	throw err;
 }
 

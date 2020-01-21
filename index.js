@@ -5,10 +5,12 @@ require('dotenv').config()
 const config = require('config')
 const blizzard = require('./utils/blizzardApiHandler')
 const dbEmitter = require('./events/dbEvents')
+const requestTimer = require("./timers/requestTimer")
 
 dbEmitter.on('connected', () => {
 	console.log("emited connected")
 	blizzard.getData()
+	requestTimer.setTimer();
 })
 
 dbConfig = config.get('mongo')
