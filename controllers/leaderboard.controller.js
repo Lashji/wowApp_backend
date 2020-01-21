@@ -2,7 +2,6 @@
 
 const build3v3Leaderboard = () => {
 	return {}
-
 }
 
 
