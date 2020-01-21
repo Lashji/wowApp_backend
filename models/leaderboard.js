@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 
 
 const leaderboardSchema = new Schema({
+
 	name: {
 		type: String,
 		required: true

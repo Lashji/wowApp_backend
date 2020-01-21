@@ -9,7 +9,7 @@ const requestTimer = require("./timers/requestTimer")
 
 dbEmitter.on('connected', () => {
 	console.log("emited connected")
-	blizzard.getData()
+	blizzard.initAPI()
 	requestTimer.setTimer();
 })
 
