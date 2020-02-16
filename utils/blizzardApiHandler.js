@@ -25,18 +25,14 @@ const initAPI = async () => {
   //   const players = []
   const players = playersToArray(leaderboard);
   Promise.all(players).then(res =>
-    Leaderboard.findOneAndUpdate(
-      {
-        name: leaderboard.name
-      },
-      {
-        players: res
-      },
-      {
-        new: true,
-        upsert: true
-      }
-    )
+    Leaderboard.findOneAndUpdate({
+      name: leaderboard.name
+    }, {
+      players: res
+    }, {
+      new: true,
+      upsert: true
+    })
   );
 };
 
@@ -55,7 +51,6 @@ const playersToArray = leaderboard => {
 };
 
 const buildPlayer = async i => {
-  //   return new Promise(async (resolve, reject) => {
   let player = i;
   const summary = await getSummary(i);
   if (!summary) return player;
@@ -66,7 +61,7 @@ const buildPlayer = async i => {
     faction,
     race,
     character_class,
-    pvp_summary,
+    // pvp_summary,
     media,
     specializations,
     equipment,
@@ -74,7 +69,7 @@ const buildPlayer = async i => {
   } = summary.data;
 
   const urls = [];
-  urls.push(pvp_summary, media, specializations, equipment, appearance);
+  urls.push(media, specializations, equipment, appearance);
   const keys = ["pvp", "media", "spec", "items", "appearance"];
   player = {
     ...player,
@@ -90,13 +85,12 @@ const buildPlayer = async i => {
     let response = await doRequest(urls[i].href);
     player[keys[i]] = response.data;
   }
-  // console.log("player", player)
-  // setTimeout(() => {
-  //   console.log("timeout");
-  // }, 1000); //0.5sec timeout for not spamming too many requests
+  console.log("player", player);
+  setTimeout(() => {
+    console.log("timeout");
+  }, 1000); //0.5sec timeout for not spamming too many requests
   console.log("returning player ");
   return player;
-  //   });
 };
 
 const getSummary = async data => {
