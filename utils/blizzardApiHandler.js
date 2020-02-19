@@ -4,6 +4,7 @@ const axios = require("axios");
 let token;
 const Leaderboard = require("../models/leaderboard");
 const BASE_URL_EU = "https://eu.api.blizzard.com/";
+const DataHandler = require("./datahandler")
 let NAMESPACE = "profile-eu";
 let LOCALE = "en_US";
 
@@ -22,7 +23,6 @@ const initAPI = async () => {
     players: pvpleaderboard.entries.slice(0, 2)
   });
 
-  //   const players = []
   const players = playersToArray(leaderboard);
   Promise.all(players).then(res =>
     Leaderboard.findOneAndUpdate({
@@ -37,7 +37,6 @@ const initAPI = async () => {
 };
 
 const playersToArray = leaderboard => {
-  //   return new Promise(async (resolve, reject) => {
   let players = [];
   for (let i in leaderboard.players) {
     console.log("pushing");
@@ -47,21 +46,20 @@ const playersToArray = leaderboard => {
 
   console.log("returning from array");
   return players;
-  //   });
 };
 
 const buildPlayer = async i => {
   let player = i;
   const summary = await getSummary(i);
   if (!summary) return player;
-  console.log("summary");
+
   const {
     name,
     gender,
     faction,
     race,
     character_class,
-    // pvp_summary,
+    pvp_summary,
     media,
     specializations,
     equipment,
@@ -69,7 +67,8 @@ const buildPlayer = async i => {
   } = summary.data;
 
   const urls = [];
-  urls.push(media, specializations, equipment, appearance);
+  urls.push(pvp_summary, media, specializations, equipment, appearance);
+
   const keys = ["pvp", "media", "spec", "items", "appearance"];
   player = {
     ...player,
@@ -79,18 +78,22 @@ const buildPlayer = async i => {
     race,
     character_class
   };
+
   console.log("requests");
   for (let i in urls) {
     console.log("doing requests");
     let response = await doRequest(urls[i].href);
     player[keys[i]] = response.data;
   }
-  console.log("player", player);
-  setTimeout(() => {
-    console.log("timeout");
-  }, 1000); //0.5sec timeout for not spamming too many requests
-  console.log("returning player ");
-  return player;
+
+  const datahandler = new DataHandler(player)
+
+  // setTimeout(() => {
+  //   console.log("timeout");
+  // }, 500); //0.5sec timeout for not spamming too many requests
+
+
+  return datahandler.cleanedData();
 };
 
 const getSummary = async data => {
