@@ -20,10 +20,11 @@ const initAPI = async () => {
   let leaderboard = new Leaderboard({
     name: pvpleaderboard.name,
     type: pvpleaderboard.bracket.type,
-    players: pvpleaderboard.entries.slice(0, 2)
+    players: pvpleaderboard.entries.slice(0, 10)
   });
 
   const players = playersToArray(leaderboard);
+
   Promise.all(players).then(res =>
     Leaderboard.findOneAndUpdate({
       name: leaderboard.name
