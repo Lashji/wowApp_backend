@@ -26,6 +26,7 @@ class DataHandler {
 			race,
 			character_class,
 		} = this.rawData
+
 		this.data.general = {
 			name: character.name,
 			id: character.id,

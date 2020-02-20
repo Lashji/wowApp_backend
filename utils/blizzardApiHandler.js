@@ -13,14 +13,14 @@ const initAPI = async () => {
   let response = await getToken();
   token = response.data.access_token;
   let url =
-    "https://eu.api.blizzard.com/data/wow/pvp-season/27/pvp-leaderboard/3v3?namespace=dynamic-eu&locale=en_US";
+    "https://eu.api.blizzard.com/data/wow/pvp-season/29/pvp-leaderboard/3v3?namespace=dynamic-eu&locale=en_US";
   let ladderResponse = await doRequest(url);
   let pvpleaderboard = ladderResponse.data;
 
   let leaderboard = new Leaderboard({
     name: pvpleaderboard.name,
     type: pvpleaderboard.bracket.type,
-    players: pvpleaderboard.entries.slice(0, 10)
+    players: pvpleaderboard.entries.slice(0, 20)
   });
 
   const players = playersToArray(leaderboard);
@@ -52,7 +52,10 @@ const playersToArray = leaderboard => {
 const buildPlayer = async i => {
   let player = i;
   const summary = await getSummary(i);
-  if (!summary) return player;
+  if (!summary) {
+    console.log("no summary ")
+    return player;
+  }
 
   const {
     name,
