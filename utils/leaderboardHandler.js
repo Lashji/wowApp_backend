@@ -8,8 +8,8 @@ let LOCALE = "en_US";
 
 class LeaderboardHandler {
 
-	constructor(token) {
-		this.token = token
+	constructor(request) {
+		this.doRequest = request
 		this.init()
 	}
 
@@ -115,16 +115,16 @@ class LeaderboardHandler {
 		return datahandler.cleanedData();
 	};
 
-	async doRequest(url, log = false, token) {
-		return axios
-			.get(url, {
-				headers: {
-					Authorization: "Bearer " + this.token
-				}
-			})
-			.then(res => (log ? console.log(res) : "" || res))
-			.catch(err => console.log("err: ", err));
-	};
+	// async doRequest(url, log = false,) {
+	// 	return axios
+	// 		.get(url, {
+	// 			headers: {
+	// 				Authorization: "Bearer " + this.token
+	// 			}
+	// 		})
+	// 		.then(res => (log ? console.log(res) : "" || res))
+	// 		.catch(err => console.log("err: ", err));
+	// };
 
 }
 

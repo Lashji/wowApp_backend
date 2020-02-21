@@ -14,6 +14,7 @@ const initAPI = async () => {
   let response = await getToken();
   token = response.data.access_token;
   getData(token)
+  getMedia()
 }
 
 const doRequest = async (url, log = false) => {
@@ -28,8 +29,12 @@ const doRequest = async (url, log = false) => {
 };
 
 const getData = (token) => {
-  const leaderboadhandler = new LeaderboardHandler(token)
+  const leaderboadhandler = new LeaderboardHandler(doRequest)
 };
+
+const getMedia = (token) => {
+  const mediaHandler = new MediaHandler(doRequest)
+}
 
 const refreshData = () => {
   console.log("refreshing data");
