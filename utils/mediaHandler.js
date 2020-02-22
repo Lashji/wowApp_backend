@@ -2,7 +2,7 @@ const fs = require('fs')
 const https = require('https')
 const path = require('path')
 const axios = require('axios')
-
+const ClassList = require('../models/classIconList')
 class MediaHandler {
 
 	constructor(request) {
@@ -31,14 +31,21 @@ class MediaHandler {
 		for (let i = 0; i < classes.length; i++) {
 			let url = `https://us.api.blizzard.com/data/wow/media/playable-class/${classes[i].id}?namespace=static-us&locale=en_US`
 			let response = await this.doRequest(url)
-			let ic = response.data.assets[0].value
-			// let data = await this.doRequest(ic)
-			console.log("ic", ic)
-			// console.log("data", data)
-			this.saveImage(`classIcons/${classes[i].name}.jpg`, ic)
-			// this.saveImageAxios(`classIcons/${classes[i].name}.jpg`, ic)
+			let iconUrl = response.data.assets[0].value
+			this.classIcons.push(`${classes[i].name}.jpg`)
+			this.saveImage(`classIcons/${classes[i].name}.jpg`, iconUrl)
 		}
 
+
+		let updated = await ClassList.findOneAndUpdate({
+			name: 'classIconList'
+		}, {
+			data: this.classIcons
+		}, {
+			new: true,
+			upsert: true
+		})
+		console.log("updated", updated)
 	}
 
 	async getIndex() {
