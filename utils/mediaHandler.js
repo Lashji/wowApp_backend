@@ -2,19 +2,17 @@ const fs = require('fs')
 const https = require('https')
 const path = require('path')
 const axios = require('axios')
-const ClassList = require('../models/classIconList')
+const IconList = require('../models/iconList')
 class MediaHandler {
 
 	constructor(request) {
 		this.doRequest = request
-		this.init()
+		// this.refreshImages()
 		this.classIcons = []
 		this.specIcons = []
 	}
 
-	async init() {
-
-
+	async refreshImages() {
 		this.fetchClassIcons()
 		this.fetchSpecIcons()
 	}
@@ -24,7 +22,7 @@ class MediaHandler {
 		const indexUrl = "https://us.api.blizzard.com/data/wow/playable-specialization/index?namespace=static-us"
 		const indexRes = await this.doRequest(indexUrl)
 		const specs = indexRes.character_specializations
-
+		const specIcons = []
 		for (let i in specs) {
 			let {
 				id,
@@ -37,10 +35,16 @@ class MediaHandler {
 			console.log('name', name)
 			const imgUrl = mediaResponse.assets[0].value
 			console.log('imgurl', imgUrl)
+			specIcons.push(`${specs[i].name}.jpg`)
 			this.saveImage(`specIcons/${name}.jpg`, imgUrl)
+			setTimeout(() => {
+				console.log('timeout .5sec in fetchSpecIcons')
+			}, 500)
 		}
 
-		// const ids = indexRes.character_specializations.map(i => i.id)
+
+		this.saveListToDB(specIcons, "specIconList")
+
 	}
 
 	async fetchClassIcons() {
@@ -48,29 +52,33 @@ class MediaHandler {
 		const indexUrl = "https://us.api.blizzard.com/data/wow/playable-class/index?namespace=static-us"
 		const res = await this.doRequest(indexUrl)
 		const classes = res.classes
+		const classIcons = []
 		console.log('classes: ', res)
 		for (let i = 0; i < classes.length; i++) {
 			const url = `https://us.api.blizzard.com/data/wow/media/playable-class/${classes[i].id}?namespace=static-us`
 			const response = await this.doRequest(url)
 			console.log("class response", response)
 			const iconUrl = response.assets[0].value
-			this.classIcons.push(`${classes[i].name}.jpg`)
+			classIcons.push(`${classes[i].name}.jpg`)
 			this.saveImage(`classIcons/${classes[i].name}.jpg`, iconUrl)
 		}
 
+		this.saveListToDB(classIcons, "classIconList")
+	}
 
-		let updated = await ClassList.findOneAndUpdate({
-			name: 'classIconList'
+	async saveListToDB(data, name) {
+
+		let updated = await IconList.findOneAndUpdate({
+			name: name
 		}, {
-			data: this.classIcons
+			data: data
 		}, {
 			new: true,
 			upsert: true
 		})
 		console.log("updated", updated)
+
 	}
-
-
 
 
 	// async saveImage(path, url) {
