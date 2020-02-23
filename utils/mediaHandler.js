@@ -35,8 +35,8 @@ class MediaHandler {
 			console.log('name', name)
 			const imgUrl = mediaResponse.assets[0].value
 			console.log('imgurl', imgUrl)
-			specIcons.push(`${specs[i].name}.jpg`)
-			this.saveImage(`specIcons/${name}.jpg`, imgUrl)
+			specIcons.push(`${specs[i].name.toLowerCase()}.jpg`)
+			this.saveImage(`specIcons/${name.toLowerCase()}.jpg`, imgUrl)
 			setTimeout(() => {
 				console.log('timeout .5sec in fetchSpecIcons')
 			}, 500)
@@ -59,8 +59,8 @@ class MediaHandler {
 			const response = await this.doRequest(url)
 			console.log("class response", response)
 			const iconUrl = response.assets[0].value
-			classIcons.push(`${classes[i].name}.jpg`)
-			this.saveImage(`classIcons/${classes[i].name}.jpg`, iconUrl)
+			classIcons.push(`${classes[i].name}.jpg`.toLowerCase())
+			this.saveImage(`classIcons/${classes[i].name}.jpg`.toLowerCase(), iconUrl)
 		}
 
 		this.saveListToDB(classIcons, "classIconList")
