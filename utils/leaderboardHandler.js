@@ -20,7 +20,7 @@ class LeaderboardHandler {
 
 		try {
 			let ladderResponse = await this.doRequest(url);
-			let pvpleaderboard = ladderResponse.data;
+			let pvpleaderboard = ladderResponse;
 
 			let leaderboard = new Leaderboard({
 				name: pvpleaderboard.name,
@@ -83,7 +83,7 @@ class LeaderboardHandler {
 			specializations,
 			equipment,
 			appearance
-		} = summary.data;
+		} = summary;
 
 		const urls = [];
 		urls.push(pvp_summary, media, specializations, equipment, appearance);
@@ -102,7 +102,7 @@ class LeaderboardHandler {
 		for (let i in urls) {
 			console.log("doing requests");
 			let response = await this.doRequest(urls[i].href);
-			player[keys[i]] = response.data;
+			player[keys[i]] = response;
 		}
 
 		const datahandler = new DataHandler(player)

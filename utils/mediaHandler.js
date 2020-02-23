@@ -10,28 +10,50 @@ class MediaHandler {
 		this.init()
 		this.classIcons = []
 		this.specIcons = []
-		this.index = []
 	}
 
-	init() {
+	async init() {
+
+
 		this.fetchClassIcons()
 		this.fetchSpecIcons()
 	}
 
-	fetchSpecIcons() {
+	async fetchSpecIcons() {
 
+		const indexUrl = "https://us.api.blizzard.com/data/wow/playable-specialization/index?namespace=static-us"
+		const indexRes = await this.doRequest(indexUrl)
+		const specs = indexRes.character_specializations
 
+		for (let i in specs) {
+			let {
+				id,
+				name,
+				key
+			} = specs[i]
+			let mediaUrl = `https://us.api.blizzard.com/data/wow/media/playable-specialization/${id}?namespace=static-us`
+			let mediaResponse = await this.doRequest(mediaUrl)
+			console.log("media response: ", mediaResponse)
+			console.log('name', name)
+			const imgUrl = mediaResponse.assets[0].value
+			console.log('imgurl', imgUrl)
+			this.saveImage(`specIcons/${name}.jpg`, imgUrl)
+		}
+
+		// const ids = indexRes.character_specializations.map(i => i.id)
 	}
 
 	async fetchClassIcons() {
 		console.log("fetching classIcons")
-		await this.getIndex()
-		let classes = this.index.classes
-
+		const indexUrl = "https://us.api.blizzard.com/data/wow/playable-class/index?namespace=static-us"
+		const res = await this.doRequest(indexUrl)
+		const classes = res.classes
+		console.log('classes: ', res)
 		for (let i = 0; i < classes.length; i++) {
-			let url = `https://us.api.blizzard.com/data/wow/media/playable-class/${classes[i].id}?namespace=static-us&locale=en_US`
-			let response = await this.doRequest(url)
-			let iconUrl = response.data.assets[0].value
+			const url = `https://us.api.blizzard.com/data/wow/media/playable-class/${classes[i].id}?namespace=static-us`
+			const response = await this.doRequest(url)
+			console.log("class response", response)
+			const iconUrl = response.assets[0].value
 			this.classIcons.push(`${classes[i].name}.jpg`)
 			this.saveImage(`classIcons/${classes[i].name}.jpg`, iconUrl)
 		}
@@ -48,11 +70,7 @@ class MediaHandler {
 		console.log("updated", updated)
 	}
 
-	async getIndex() {
-		const url = "https://us.api.blizzard.com/data/wow/playable-class/index?namespace=static-us&locale=en_US"
-		let res = await this.doRequest(url)
-		this.index = res.data
-	}
+
 
 
 	// async saveImage(path, url) {

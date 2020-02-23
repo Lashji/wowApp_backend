@@ -12,7 +12,8 @@ let LOCALE = "en_US";
 const initAPI = async () => {
   console.log("initing api");
   let response = await getToken();
-  token = response.data.access_token;
+  token = response.access_token;
+  console.log("token: ", token)
   getData(token)
   getMedia()
 }
@@ -22,9 +23,12 @@ const doRequest = async (url, log = false) => {
     .get(url, {
       headers: {
         Authorization: "Bearer " + token
+      },
+      params: {
+        locale: LOCALE
       }
     })
-    .then(res => (log ? console.log(res) : "" || res))
+    .then(res => (log ? console.log(res) : "" || res.data))
     .catch(err => console.log("err: ", err));
 };
 
@@ -51,7 +55,8 @@ const getToken = () => {
         grant_type: "client_credentials"
       }
     })
-    .then(response => response || console.log("res", response));
+    .then(response => response.data || console.log("res", response))
+    .catch(err => console.err("error when requesting: ", err))
 };
 
 module.exports = {
