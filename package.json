@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Lashji/wowApp_backend#readme",
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "config": "^3.2.5",
     "dotenv": "^8.2.0",
